@@ -3,6 +3,10 @@
   "displayName": "mdtags",
   "description": "Tags support for markdown files",
   "version": "0.0.1",
+  "repository": {
+    "url": "https://github.com/crazafimahatratra/mdtags.git"
+  },
+  "publisher": "Chraz",
   "engines": {
     "vscode": "^1.86.0"
   },
