@@ -4,7 +4,7 @@
   "description": "Tags support for markdown files",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.87.0"
+    "vscode": "^1.86.0"
   },
   "categories": [
     "Other"
@@ -12,30 +12,56 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "mdtags.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+    "commands": [{
+      "command": "mdfileTags.refresh",
+      "title": "Refresh tags",
+      "icon": "$(refresh)"
+    }],
+    "views": {
+      "mdTagsExplorer": [
+        {
+          "id": "mdfileTags",
+          "name": "Markdown Tags"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "mdfileTags.refresh",
+          "when": "view == mdfileTags",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [{
+        "id": "mdTagsExplorer",
+        "title": "Markdown Tags",
+        "icon": "$(type-hierarchy)"
+      }]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "pretest": "rm -rf out",
+    "test": "jest"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
+    "@types/jest": "^29.5.12",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.86.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
   }
 }
