@@ -2,9 +2,15 @@
   "name": "mdtags",
   "displayName": "mdtags",
   "description": "Tags support for markdown files",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "icon": "icon.png",
   "repository": {
+    "type": "git",
     "url": "https://github.com/crazafimahatratra/mdtags.git"
+  },
+  "bugs": {
+    "url": "https://github.com/crazafimahatratra/mdtags/issues",
+    "email": "rhisty@gmail.com"
   },
   "publisher": "Chraz",
   "engines": {
