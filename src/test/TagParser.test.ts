@@ -81,3 +81,13 @@ test('Given files with duplicated tags in the same file, When getTags, Then it s
             [{ line: 0, col: 29, extract: '...ptates #debitis #debitis #sit' }]
         ]]);
 });
+
+test('Given TAG within word, It should not consider it', () => {
+    const data = new Map<string, string>();
+    data.set('file-1', "Aut voluptates perferendis magnam culpa#qui cupiditate aut aperiam.");
+    const parser = new TagParser(data);
+
+    const tags = parser.getTags();
+
+    expect(tags.map(t => t.label)).toEqual([]);
+})

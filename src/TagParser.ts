@@ -28,7 +28,7 @@ export class TagParser {
 
     private appendContentToTags(file: string, content: string, tags: Tag[]) {
         const textPosition = new TextPosition();
-        const matches = content.matchAll(/#[a-z,A-Z,0-9,\-,_]+/g);
+        const matches = content.matchAll(/\B#[a-z,A-Z,0-9,\-,_]+/g);
         for (const match of matches) {
             const position = textPosition.getTagPosition(content, match.index ?? 0);
             const tag = match[0];

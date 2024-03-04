@@ -2,7 +2,7 @@
   "name": "mdtags",
   "displayName": "mdtags",
   "description": "Tags support for markdown files",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "icon": "icon.png",
   "repository": {
     "type": "git",
