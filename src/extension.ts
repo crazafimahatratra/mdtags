@@ -5,8 +5,21 @@ import * as fs from 'fs';
 import { MarkdownProvider } from './MarkdownProvider';
 import { TagParser } from './TagParser';
 
+async function getFilesInWorkspace() {
+	const uris: vscode.Uri[] = [];
+	const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
+	const folder = (vscode.workspace.getConfiguration('MDTags').get('rootFolder') ?? '.') as string;
+	const exclude = (vscode.workspace.getConfiguration('MDTags').get('exclude') ?? '') as string;
+	for (let workspaceFolder of workspaceFolders) {
+		const p = new vscode.RelativePattern(workspaceFolder, `${folder}**/*.md`);
+		const u = await vscode.workspace.findFiles(p, exclude);
+		uris.push(...u);
+	}
+	return uris;
+}
+
 async function refreshData() {
-	const uris = await vscode.workspace.findFiles('**/*.md', '**/node_modules/**');
+	const uris = await getFilesInWorkspace();
 	const contents = new Map<string, string>();
 	uris.forEach(uri => {
 		const content = fs.readFileSync(uri.path).toString();
@@ -21,7 +34,7 @@ let editor: vscode.TextEditor | undefined = undefined;
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	const provider = new MarkdownProvider(await refreshData());
-	vscode.window.createTreeView('mdfileTags', {
+	vscode.window.createTreeView('mdtags', {
 		treeDataProvider: provider
 	});
 
@@ -40,9 +53,25 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	})
 
-	vscode.commands.registerCommand('mdfileTags.refresh', async () =>
+	vscode.commands.registerCommand('mdtags.refresh', async () =>
 		provider.refresh(await refreshData())
 	);
+
+	vscode.commands.registerCommand('mdtags.openFile', (path: string, options: { selection: vscode.Selection }) =>
+		vscode.workspace.openTextDocument(path).then(document => {
+			vscode.window.showTextDocument(document, { selection: options.selection });
+		})
+	);
+
+	vscode.languages.registerCompletionItemProvider('markdown', {
+		provideCompletionItems: (document, position) => {
+			const tags = provider.getAllTags();
+
+			return tags.map(tag => {
+				return new vscode.CompletionItem(tag.label.substring(1), vscode.CompletionItemKind.Value);
+			});
+		}
+	}, '#')
 }
 
 function updateDecorations(provider: MarkdownProvider) {

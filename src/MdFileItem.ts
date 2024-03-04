@@ -23,7 +23,7 @@ export class MdFileItem extends vscode.TreeItem {
         this.filePath = filePath;
         if (this.type === 'LOCATION') {
             this.command = {
-                command: 'vscode.open',
+                command: 'mdtags.openFile',
                 arguments: [
                     this.filePath, {
                         selection: new vscode.Selection(location.line, location.col, location.line, location.col)

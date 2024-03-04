@@ -89,6 +89,10 @@ export class MarkdownProvider implements vscode.TreeDataProvider<MdFileItem> {
         return tags;
     }
 
+    public getAllTags() {
+        return this.tags;
+    }
+
     refresh(tags: Tag[]) {
         this.tags = tags;
         this._onDidChangeTreeData.fire();

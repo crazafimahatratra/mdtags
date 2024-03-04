@@ -2,7 +2,7 @@
   "name": "mdtags",
   "displayName": "mdtags",
   "description": "Tags support for markdown files",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -23,14 +23,14 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [{
-      "command": "mdfileTags.refresh",
-      "title": "Refresh tags",
+      "command": "mdtags.refresh",
+      "title": "Md Tags: Refresh tags",
       "icon": "$(refresh)"
     }],
     "views": {
       "mdTagsExplorer": [
         {
-          "id": "mdfileTags",
+          "id": "mdtags",
           "name": "Markdown Tags"
         }
       ]
@@ -38,8 +38,8 @@
     "menus": {
       "view/title": [
         {
-          "command": "mdfileTags.refresh",
-          "when": "view == mdfileTags",
+          "command": "mdtags.refresh",
+          "when": "view == mdtags",
           "group": "navigation"
         }
       ]
@@ -50,7 +50,24 @@
         "title": "Markdown Tags",
         "icon": "$(type-hierarchy)"
       }]
-    }
+    },
+    "configuration":[
+      {
+        "title": "MDTags",
+        "properties": {
+          "MDTags.rootFolder": {
+            "type": "string",
+            "default": "",
+            "description": "Path for reading the markdown files. (The path is relative to workspace folder)"
+          }, 
+          "MDTags.exclude": {
+            "type": "string",
+            "default": "**/{node_modules,vendor}/**",
+            "description": "Paths to be excluded. Supports glob pattern"
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
