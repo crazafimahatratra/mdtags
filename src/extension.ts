@@ -8,14 +8,27 @@ import { TagParser } from './TagParser';
 async function getFilesInWorkspace() {
 	const uris: vscode.Uri[] = [];
 	const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
-	const folder = (vscode.workspace.getConfiguration('MDTags').get('rootFolder') ?? '.') as string;
+	const rootFolder = (vscode.workspace.getConfiguration('MDTags').get('rootFolder') ?? '.') as string;
 	const exclude = (vscode.workspace.getConfiguration('MDTags').get('exclude') ?? '') as string;
+
 	for (let workspaceFolder of workspaceFolders) {
-		const p = new vscode.RelativePattern(workspaceFolder, `${folder}**/*.md`);
+		const p = getRelativePath(workspaceFolder, rootFolder);
 		const u = await vscode.workspace.findFiles(p, exclude);
 		uris.push(...u);
 	}
 	return uris;
+}
+
+function getRelativePath(workspaceFolder: vscode.WorkspaceFolder, rootFolder: string) {
+	let base = `${workspaceFolder.uri.path}/..`;
+	if(rootFolder.length === 0) {
+		base = `${workspaceFolder.uri.path}`
+	}
+	let pattern = rootFolder;
+	if(!pattern.endsWith('/') && pattern.length > 0) {
+		pattern = `${pattern}/`;
+	}
+	return new vscode.RelativePattern(base, `${pattern}**/*.md`);
 }
 
 async function refreshData() {
@@ -71,7 +84,13 @@ export async function activate(context: vscode.ExtensionContext) {
 				return new vscode.CompletionItem(tag.label.substring(1), vscode.CompletionItemKind.Value);
 			});
 		}
-	}, '#')
+	}, '#');
+
+	return {
+		extendMarkdownIt(md: any) {
+		  return md.use(plugin);
+		}
+	};
 }
 
 function updateDecorations(provider: MarkdownProvider) {
@@ -97,6 +116,16 @@ function updateDecorations(provider: MarkdownProvider) {
 			editor.setDecorations(decorationType, [new vscode.Range(startLine, startChar, endLine, endChar)]);
 		}
 	}
+}
+
+function plugin(md: any) {
+    const render = md.renderer.render;
+    md.renderer.render = function() {
+		const content = render.apply(md.renderer, arguments) as string;
+		const newContent  = content.replaceAll(/\B#[a-z,A-Z,0-9,\-,_]+/g, "<span class='mdtags-pills'>$&</span>");
+        return `${newContent}`;
+    };
+    return md;
 }
 
 // This method is called when your extension is deactivated

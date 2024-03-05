@@ -2,7 +2,7 @@
   "name": "mdtags",
   "displayName": "mdtags",
   "description": "Tags support for markdown files",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -22,11 +22,13 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [{
-      "command": "mdtags.refresh",
-      "title": "Md Tags: Refresh tags",
-      "icon": "$(refresh)"
-    }],
+    "commands": [
+      {
+        "command": "mdtags.refresh",
+        "title": "Md Tags: Refresh tags",
+        "icon": "$(refresh)"
+      }
+    ],
     "views": {
       "mdTagsExplorer": [
         {
@@ -45,13 +47,15 @@
       ]
     },
     "viewsContainers": {
-      "activitybar": [{
-        "id": "mdTagsExplorer",
-        "title": "Markdown Tags",
-        "icon": "$(type-hierarchy)"
-      }]
+      "activitybar": [
+        {
+          "id": "mdTagsExplorer",
+          "title": "Markdown Tags",
+          "icon": "$(type-hierarchy)"
+        }
+      ]
     },
-    "configuration":[
+    "configuration": [
       {
         "title": "MDTags",
         "properties": {
@@ -59,7 +63,7 @@
             "type": "string",
             "default": "",
             "description": "Path for reading the markdown files. (The path is relative to workspace folder)"
-          }, 
+          },
           "MDTags.exclude": {
             "type": "string",
             "default": "**/{node_modules,vendor}/**",
@@ -67,7 +71,11 @@
           }
         }
       }
-    ]
+    ],
+    "markdown.previewStyles": [
+      "./styles/markdown.css"
+    ],
+    "markdown.markdownItPlugins": true
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
